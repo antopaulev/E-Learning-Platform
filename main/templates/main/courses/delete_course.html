@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Delete Course - E-Learning Platform{% endblock %}
+
+{% block content %}
+    <div style="max-width: 500px; margin: 0 auto; text-align: center;">
+        <h2 style="color: #dc3545; margin-bottom: 1.5rem;">⚠️ Delete Course</h2>
+
+        <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; padding: 1.5rem; margin-bottom: 2rem; color: #721c24;">
+            <p style="margin-bottom: 1rem;">
+                <strong>Are you sure you want to delete this course?</strong>
+            </p>
+            <p style="font-size: 1.1rem; font-weight: bold; color: #333; background: white; padding: 1rem; border-radius: 5px;">
+                {{ course.title }}
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.95rem;">
+                This action <strong>cannot be undone</strong>. All course data will be permanently deleted.
+            </p>
+        </div>
+
+        <form method="POST" style="margin-bottom: 1rem;">
+            {% csrf_token %}
+            <button type="submit" style="width: 100%; padding: 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                Yes, Delete Course Permanently
+            </button>
+        </form>
+
+        <a href="{% url 'course_detail' course.id %}" style="display: block; padding: 1rem; background: #6c757d; color: white; border-radius: 5px; text-decoration: none; font-weight: bold;">
+            Cancel - Keep Course
+        </a>
+    </div>
+{% endblock %}

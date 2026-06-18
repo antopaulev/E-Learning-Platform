@@ -1,0 +1,41 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Dashboard - E-Learning Platform{% endblock %}
+
+{% block container_class %}dashboard-container{% endblock %}
+
+{% block content %}
+    <h2>Welcome to Your Dashboard, {{ user.first_name|default:user.username }}!</h2>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>👤 Profile</h3>
+            <p>{{ user.role|title }}</p>
+            <p>Email: {{ user.email }}</p>
+            <a href="{% url 'profile' %}" style="color: #667eea; text-decoration: none; font-weight: bold;">Edit Profile →</a>
+        </div>
+
+        <div class="card">
+            <h3>📚 Courses</h3>
+            <p>Explore and join courses</p>
+            <a href="{% url 'list_courses' %}" style="color: #667eea; text-decoration: none; font-weight: bold;">Browse Courses →</a>
+        </div>
+
+        <div class="card">
+            <h3>💬 Forums</h3>
+            <p>Participate in discussions</p>
+            <p style="font-size: 0.9rem; color: #999;">Coming Soon</p>
+        </div>
+
+        <div class="card">
+            <h3>🎓 My Learning</h3>
+            <p>Track your progress</p>
+            <p style="font-size: 0.9rem; color: #999;">Coming Soon</p>
+        </div>
+    </div>
+
+    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #ddd; text-align: center; color: #666;">
+        <p>Account Status: <strong style="color: #28a745;">Active</strong></p>
+        <p>Member since: {{ user.date_joined|date:"F d, Y" }}</p>
+    </div>
+{% endblock %}

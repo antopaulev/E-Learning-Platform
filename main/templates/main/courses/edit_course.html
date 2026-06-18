@@ -1,0 +1,56 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Edit Course - E-Learning Platform{% endblock %}
+
+{% block content %}
+    <h2>Edit Course: {{ course.title }}</h2>
+
+    <form method="POST" style="max-width: 600px;">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_title">Course Title *</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="error-list">
+                    {% for error in form.title.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Description *</label>
+            {{ form.description }}
+            <small style="color: #999;">Update the course description if needed.</small>
+            {% if form.description.errors %}
+                <div class="error-list">
+                    {% for error in form.description.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_max_students">Max Students</label>
+            {{ form.max_students }}
+            <small style="color: #999;">Update the maximum number of students allowed.</small>
+        </div>
+
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                {{ form.is_published }}
+                Publish this course
+            </label>
+            <small style="color: #999;">Check to make the course visible to other users.</small>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 1rem; background: #ffc107; color: #333; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1rem;">Update Course</button>
+    </form>
+
+    <div style="margin-top: 2rem; text-align: center;">
+        <a href="{% url 'course_detail' course.id %}" style="color: #667eea; text-decoration: none;">← Back to Course</a>
+    </div>
+{% endblock %}

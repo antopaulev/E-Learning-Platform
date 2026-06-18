@@ -1,0 +1,68 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Profile - E-Learning Platform{% endblock %}
+
+{% block content %}
+    <h2>Edit Your Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="error-list">
+                    {% for error in form.username.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_email">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="error-list">
+                    {% for error in form.email.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_first_name">First Name</label>
+            {{ form.first_name }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_last_name">Last Name</label>
+            {{ form.last_name }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_bio">Bio</label>
+            {{ form.bio }}
+            <small style="color: #999;">Tell us about yourself (optional)</small>
+        </div>
+
+        <div class="form-group">
+            <label for="id_profile_picture">Profile Picture</label>
+            {% if user.profile_picture %}
+                <div style="margin-bottom: 1rem;">
+                    <img src="{{ user.profile_picture.url }}" alt="Profile" style="max-width: 100px; border-radius: 5px;">
+                </div>
+            {% endif %}
+            {{ form.profile_picture }}
+            <small style="color: #999;">Upload a new picture to replace the current one</small>
+        </div>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <div class="link-text" style="margin-top: 2rem;">
+        <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+    </div>
+{% endblock %}

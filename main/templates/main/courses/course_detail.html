@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ course.title }} - E-Learning Platform{% endblock %}
+
+{% block content %}
+    <div style="max-width: 800px; margin: 0 auto;">
+        <div style="margin-bottom: 2rem;">
+            <a href="{% url 'list_courses' %}" style="color: #667eea; text-decoration: none; font-size: 0.95rem;">← Back to Courses</a>
+        </div>
+
+        <div style="background: #f8f9fa; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+            <h1 style="color: #333; margin-bottom: 0.5rem;">{{ course.title }}</h1>
+            <p style="color: #666; font-size: 0.95rem; margin-bottom: 1.5rem;">
+                <strong>Instructor:</strong> {{ course.instructor.get_full_name|default:course.instructor.username }}
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <p style="color: #999; font-size: 0.85rem;">Max Students</p>
+                    <p style="font-size: 1.2rem; color: #333; font-weight: bold;">{{ course.max_students }}</p>
+                </div>
+                <div>
+                    <p style="color: #999; font-size: 0.85rem;">Status</p>
+                    <p style="font-size: 1.2rem; color: #333; font-weight: bold;">
+                        {% if course.is_published %}
+                            <span style="color: #28a745;">Published</span>
+                        {% else %}
+                            <span style="color: #ffc107;">Draft</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <p style="color: #999; font-size: 0.85rem;">Created</p>
+                    <p style="font-size: 0.95rem; color: #333;">{{ course.created_at|date:"F d, Y" }}</p>
+                </div>
+                <div>
+                    <p style="color: #999; font-size: 0.85rem;">Last Updated</p>
+                    <p style="font-size: 0.95rem; color: #333;">{{ course.updated_at|date:"F d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: white; border: 1px solid #ddd; border-radius: 10px; padding: 2rem; margin-bottom: 2rem;">
+            <h2 style="color: #333; font-size: 1.3rem; margin-bottom: 1rem;">Description</h2>
+            <p style="color: #666; line-height: 1.8; white-space: pre-wrap;">{{ course.description }}</p>
+        </div>
+
+        {% if user.is_authenticated and course.instructor == user %}
+            <div style="display: flex; gap: 1rem;">
+                <a href="{% url 'edit_course' course.id %}" style="flex: 1; background: #ffc107; color: #333; padding: 1rem; border-radius: 5px; text-decoration: none; text-align: center; font-weight: bold;">Edit Course</a>
+                <a href="{% url 'delete_course' course.id %}" style="flex: 1; background: #dc3545; color: white; padding: 1rem; border-radius: 5px; text-decoration: none; text-align: center; font-weight: bold;">Delete Course</a>
+            </div>
+        {% elif user.is_authenticated %}
+            <div style="background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 5px; padding: 1rem; text-align: center; color: #004085;">
+                <p><strong>Ready to enroll?</strong> Enrollment feature coming soon!</p>
+            </div>
+        {% else %}
+            <div style="background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 5px; padding: 1rem; text-align: center; color: #004085;">
+                <p><a href="{% url 'login' %}" style="color: #0056b3; font-weight: bold;">Login</a> to enroll in this course.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

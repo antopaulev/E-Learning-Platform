@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Courses - E-Learning Platform{% endblock %}
+
+{% block container_class %}dashboard-container{% endblock %}
+
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2>📚 Available Courses</h2>
+        {% if user.is_authenticated and user.role == 'instructor' %}
+            <a href="{% url 'create_course' %}" style="background: #667eea; color: white; padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: bold;">+ Create Course</a>
+        {% endif %}
+    </div>
+
+    {% if courses %}
+        <div class="dashboard-grid">
+            {% for course in courses %}
+                <div class="card" style="border-left: 4px solid #667eea;">
+                    <h3>{{ course.title }}</h3>
+                    <p style="color: #666; margin-bottom: 0.5rem;">{{ course.description|truncatewords:15 }}</p>
+                    
+                    <div style="margin: 1rem 0; font-size: 0.9rem; color: #999;">
+                        <p><strong>Instructor:</strong> {{ course.instructor.get_full_name|default:course.instructor.username }}</p>
+                        <p><strong>Students:</strong> {{ course.max_students }}</p>
+                    </div>
+
+                    <a href="{% url 'course_detail' course.id %}" style="display: inline-block; background: #667eea; color: white; padding: 0.5rem 1rem; border-radius: 5px; text-decoration: none; margin-right: 0.5rem; font-size: 0.9rem;">View Details</a>
+                    
+                    {% if user.is_authenticated and course.instructor == user %}
+                        <a href="{% url 'edit_course' course.id %}" style="display: inline-block; background: #ffc107; color: #333; padding: 0.5rem 1rem; border-radius: 5px; text-decoration: none; margin-right: 0.5rem; font-size: 0.9rem;">Edit</a>
+                        <a href="{% url 'delete_course' course.id %}" style="display: inline-block; background: #dc3545; color: white; padding: 0.5rem 1rem; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">Delete</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 3rem; color: #666;">
+            <p style="font-size: 1.2rem;">No courses available yet.</p>
+            {% if user.is_authenticated and user.role == 'instructor' %}
+                <p><a href="{% url 'create_course' %}" style="color: #667eea; text-decoration: none; font-weight: bold;">Create the first course →</a></p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
