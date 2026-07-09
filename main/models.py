@@ -34,3 +34,31 @@ class Course(models.Model):
     
     class Meta:
         ordering = ['-created_at']
+
+
+class Enrollment(models.Model):
+    """Represents a student enrollment in a course"""
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
+    enrolled_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'course')
+        ordering = ['-enrolled_at']
+
+    def __str__(self):
+        return f"{self.student.username} -> {self.course.title}"
+
+
+class DiscussionPost(models.Model):
+    """A forum post for a course discussion."""
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='discussion_posts')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='discussion_posts')
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"{self.author.username} on {self.course.title}"

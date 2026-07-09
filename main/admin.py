@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
 from .models import Course
+from .models import Enrollment
+from .models import DiscussionPost
 
 
 class CustomUserAdmin(UserAdmin):
@@ -29,3 +31,20 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Course, CourseAdmin)
+
+
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'course', 'enrolled_at')
+    search_fields = ('student__username', 'course__title')
+    list_filter = ('enrolled_at',)
+
+
+admin.site.register(Enrollment, EnrollmentAdmin)
+
+
+class DiscussionPostAdmin(admin.ModelAdmin):
+    list_display = ('course', 'author', 'created_at')
+    search_fields = ('course__title', 'author__username', 'body')
+
+
+admin.site.register(DiscussionPost, DiscussionPostAdmin)

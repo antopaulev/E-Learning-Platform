@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+
+{% block title %}My Enrollments - E-Learning Platform{% endblock %}
+
+{% block content %}
+    <h2>My Enrollments</h2>
+
+    {% if enrollments %}
+        <div class="dashboard-grid">
+            {% for en in enrollments %}
+                <div class="card">
+                    <h3>{{ en.course.title }}</h3>
+                    <p>{{ en.course.description|truncatewords:20 }}</p>
+                    <p style="color:#999;">Enrolled on: {{ en.enrolled_at|date:"F d, Y" }}</p>
+                    <a href="{% url 'course_detail' en.course.id %}" style="display:inline-block; background:#667eea; color:white; padding:0.5rem 1rem; border-radius:6px; text-decoration:none; margin-top:0.5rem;">Open Course</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color:#666;">You are not enrolled in any courses yet.</p>
+    {% endif %}
+{% endblock %}

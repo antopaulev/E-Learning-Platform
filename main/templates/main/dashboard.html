@@ -15,6 +15,15 @@
             <a href="{% url 'profile' %}" style="color: #667eea; text-decoration: none; font-weight: bold;">Edit Profile →</a>
         </div>
 
+        {% if user.role == 'instructor' %}
+            <div class="card">
+                <h3>📊 Instructor Dashboard</h3>
+                <p><strong>Total Students Enrolled</strong>: {{ instructor_stats.total_students_enrolled|default:0 }}</p>
+                <p><strong>Courses Created</strong>: {{ instructor_stats.courses_created|default:0 }}</p>
+                <p><strong>Pending Enrollments</strong>: {{ instructor_stats.pending_enrollments|default:0 }}</p>
+            </div>
+        {% endif %}
+
         <div class="card">
             <h3>📚 Courses</h3>
             <p>Explore and join courses</p>
@@ -22,15 +31,42 @@
         </div>
 
         <div class="card">
-            <h3>💬 Forums</h3>
-            <p>Participate in discussions</p>
-            <p style="font-size: 0.9rem; color: #999;">Coming Soon</p>
-        </div>
-
-        <div class="card">
-            <h3>🎓 My Learning</h3>
-            <p>Track your progress</p>
-            <p style="font-size: 0.9rem; color: #999;">Coming Soon</p>
+            <h3>{% if user.role == 'instructor' %}🧑‍🏫 My Courses{% else %}🎓 My Learning{% endif %}</h3>
+            {% if user.role == 'instructor' %}
+                {% if my_courses %}
+                    <ul style="list-style:none; padding-left:0; margin:0;">
+                        {% for course in my_courses|slice:":4" %}
+                            <li style="margin-bottom:0.5rem;">
+                                <a href="{% url 'course_detail' course.id %}" style="color:#333; text-decoration:none; font-weight:600;">{{ course.title }}</a>
+                                <div style="font-size:0.85rem; color:#666;">{{ course.created_at|date:"M d, Y" }}</div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div style="margin-top:0.75rem;">
+                        <a href="{% url 'create_course' %}" style="color:#667eea; text-decoration:none; font-weight:bold;">Create course →</a>
+                    </div>
+                {% else %}
+                    <p style="color:#666;">You have not created any courses yet.</p>
+                    <a href="{% url 'create_course' %}" style="color:#667eea; text-decoration:none; font-weight:bold;">Create one now →</a>
+                {% endif %}
+            {% else %}
+                {% if enrollments and enrollments.count %}
+                    <ul style="list-style:none; padding-left:0; margin:0;">
+                        {% for en in enrollments|slice:":4" %}
+                            <li style="margin-bottom:0.5rem;">
+                                <a href="{% url 'course_detail' en.course.id %}" style="color:#333; text-decoration:none; font-weight:600;">{{ en.course.title }}</a>
+                                <div style="font-size:0.85rem; color:#666;">Enrolled {{ en.enrolled_at|date:"M d, Y" }}</div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div style="margin-top:0.75rem;">
+                        <a href="{% url 'my_enrollments' %}" style="color:#667eea; text-decoration:none; font-weight:bold;">View all →</a>
+                    </div>
+                {% else %}
+                    <p style="color:#666;">You have not enrolled in any courses yet.</p>
+                    <a href="{% url 'list_courses' %}" style="color:#667eea; text-decoration:none; font-weight:bold;">Browse Courses →</a>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 

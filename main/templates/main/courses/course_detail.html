@@ -48,14 +48,55 @@
             <p style="color: #666; line-height: 1.8; white-space: pre-wrap;">{{ course.description }}</p>
         </div>
 
+        <div style="background: white; border: 1px solid #ddd; border-radius: 10px; padding: 2rem; margin-top: 2rem;">
+            <h2 style="color: #333; font-size: 1.3rem; margin-bottom: 1rem;">Discussion Forum</h2>
+            {% if user.is_authenticated %}
+                <form method="post" style="margin-bottom: 1.5rem;">
+                    {% csrf_token %}
+                    <textarea name="body" rows="3" placeholder="Write a comment for this course..." style="width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+                    <button type="submit" style="margin-top: 0.5rem; background: #667eea; color: white; border: none; padding: 0.7rem 1rem; border-radius: 6px;">Post Comment</button>
+                </form>
+            {% else %}
+                <p><a href="{% url 'login' %}">Login</a> to post a comment.</p>
+            {% endif %}
+
+            {% if posts %}
+                {% for post in posts %}
+                    <div style="border-top: 1px solid #eee; padding: 1rem 0;">
+                        <strong>{{ post.author.get_full_name|default:post.author.username }}</strong>
+                        <div style="font-size: 0.85rem; color: #999; margin-bottom: 0.4rem;">{{ post.created_at|date:"M d, Y H:i" }}</div>
+                        <div style="color: #444; white-space: pre-wrap;">{{ post.body }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #666;">No comments yet. Be the first to start the discussion.</p>
+            {% endif %}
+        </div>
+
         {% if user.is_authenticated and course.instructor == user %}
             <div style="display: flex; gap: 1rem;">
                 <a href="{% url 'edit_course' course.id %}" style="flex: 1; background: #ffc107; color: #333; padding: 1rem; border-radius: 5px; text-decoration: none; text-align: center; font-weight: bold;">Edit Course</a>
                 <a href="{% url 'delete_course' course.id %}" style="flex: 1; background: #dc3545; color: white; padding: 1rem; border-radius: 5px; text-decoration: none; text-align: center; font-weight: bold;">Delete Course</a>
             </div>
+        {% elif user.is_authenticated and user.role == 'student' %}
+            {% if is_enrolled %}
+                <div style="text-align:center; margin-top:1rem;">
+                    <form method="POST" action="{% url 'unenroll_course' course.id %}">
+                        {% csrf_token %}
+                        <button type="submit" style="background:#dc3545; color:white; padding:0.75rem 1rem; border-radius:6px; border:none;">Unenroll</button>
+                    </form>
+                </div>
+            {% else %}
+                <div style="text-align:center; margin-top:1rem;">
+                    <form method="POST" action="{% url 'enroll_course' course.id %}">
+                        {% csrf_token %}
+                        <button type="submit" style="background:#28a745; color:white; padding:0.75rem 1rem; border-radius:6px; border:none;">Enroll in this course</button>
+                    </form>
+                </div>
+            {% endif %}
         {% elif user.is_authenticated %}
             <div style="background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 5px; padding: 1rem; text-align: center; color: #004085;">
-                <p><strong>Ready to enroll?</strong> Enrollment feature coming soon!</p>
+                <p>Only students can enroll in courses. Your role: <strong>{{ user.role }}</strong></p>
             </div>
         {% else %}
             <div style="background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 5px; padding: 1rem; text-align: center; color: #004085;">

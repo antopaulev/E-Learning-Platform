@@ -212,7 +212,9 @@
 <body>
     <header>
         <nav>
-            <div class="logo">🎓 E-Learning</div>
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <div class="logo">🎓 E-Learning</div>
+            </div>
             <ul>
                 <li><a href="{% url 'home' %}">Home</a></li>
                 {% if user.is_authenticated %}

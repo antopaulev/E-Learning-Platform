@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Unenroll - E-Learning Platform{% endblock %}
+
+{% block content %}
+    <div style="max-width:500px; margin:0 auto; text-align:center;">
+        <h2>Unenroll from {{ course.title }}?</h2>
+        <p style="color:#666;">Are you sure you want to unenroll? You will lose access to course materials.</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" style="background:#dc3545; color:white; padding:0.75rem 1rem; border-radius:6px; border:none;">Yes, Unenroll</button>
+        </form>
+        <div style="margin-top:1rem;"><a href="{% url 'course_detail' course.id %}">Cancel</a></div>
+    </div>
+{% endblock %}
